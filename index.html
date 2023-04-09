@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <title>Document</title>
+</head>
+<body>
+    <div id="app"></div>
+</body>
+</html>
+<script  type="text/jsx">
+    const app = document.getElementById("app")
+
+
+    function handleSubmit(e) {
+        e.preventDefault()
+        const form = e.target
+        const formData = new FormData(form)
+        const formJson = Object.fromEntries(formData.entries())
+        const currentStorage = window.localStorage.getItem("todoList")
+        
+        console.log(formJson)
+
+        if (currentStorage) {
+            let parse = JSON.parse(currentStorage)
+            parse.push(formJson.taskName)
+            const newTask = parse
+            console.log(newTask, parse)
+            window.localStorage.setItem("todoList", JSON.stringify(newTask))
+        } else {
+            const newTask = JSON.stringify([formJson.taskName])
+            window.localStorage.setItem("todoList", newTask)
+        }
+
+    } 
+
+    function clearToDo(){
+        return window.localStorage.clear()
+    }
+
+    
+    function HomePage() {
+        return (
+            <div>
+                <FormToDo />
+            </div>
+        )
+    } 
+
+    function FormToDo() {
+        return (
+            <form method="post" onSubmit={handleSubmit}>
+                <input name="taskName" />
+                <button type="submit">Add</button>
+                <button type="button" onClick={clearToDo}>Clear</button>
+            </form>
+        ) 
+    }
+
+    ReactDOM.render(<HomePage />, app)
+</script>
